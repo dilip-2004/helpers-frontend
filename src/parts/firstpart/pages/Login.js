@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Navigate, json, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -21,7 +21,7 @@ const Login = (props) => {
   const [successMessage,setSuccessMessage]=useState('');
   const navigate=useNavigate();
 
-  const {register,handleSubmit,formState:{errors},reset}=useForm({
+  const {register,handleSubmit,formState:{errors}}=useForm({
     resolver:yupResolver(schema)
   });
 
@@ -149,9 +149,9 @@ const Login = (props) => {
                   Password
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-teal-500 hover:text-teal-600">
+                  <p  className="font-semibold text-teal-500 hover:text-teal-600">
                     Forgot password?
-                  </a>
+                  </p>
                 </div>
               </div>
               <div className="mt-2">

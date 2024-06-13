@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import axios from 'axios';
 import SpinnerLoader from '../components/SpinnerLoader';
-import SuccessMessage from '../components/SuccessMessage';
 import ErrorMessage from '../components/ErrorMessage';
 
 const schema = yup.object().shape({
@@ -25,7 +24,6 @@ const HelperSignup = () => {
   const [role, setRole] = useState('Calisthenics');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const roleHandler = (event) => {
@@ -40,6 +38,7 @@ const HelperSignup = () => {
     setLoading(true);
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}api/helper/signup/check`, values);
+      console.log(response);
       setError('');
       navigate(`/signup/mobileNumberVerify/${values.helperName}/${values.helperDOB}/${values.helperGender}/${values.helperRole}/${values.helperExperience}/${values.helperWorkTime}/${values.helperEmail}/${values.helperPassword}/${values.helperConfirmPassword}`);
     } catch (error) {
@@ -293,9 +292,6 @@ const HelperSignup = () => {
 
       {/* Error Message */}
       {error && <div className='text-center text-red-600 font-semibold animate-bounce'><ErrorMessage message={error} /></div>}
-
-      {/* Success Message */}
-      {successMessage && <div className='text-teal-600 text-center font-semibold animate-bounce'><SuccessMessage message={successMessage} /></div>}
 
       <div className='text-center text-sm text-gray-900'>
         If you already have an account?{' '}

@@ -8,7 +8,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import AddedList from './parts/userpart/pages/AddedList'
 import Usernavbar from './components/Usernavbar'
 import HelperNavbar from './components/HelperNavbar'
-import UserProfile from './parts/userpart/pages/UserProfile'
+import UserProfile from './parts/userpart/pages/UserProfile';
 import SideBar from './parts/userpart/pages/SideBar'
 import Helperslist from './parts/userpart/pages/Helperslist'
 import Helperdetails from './parts/userpart/pages/Helperdetails'

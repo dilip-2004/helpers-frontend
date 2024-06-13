@@ -45,7 +45,10 @@ const DashBoard = () => {
     <div className=' max-w-sm m-auto sm:max-w-sm sm:m-auto sm:mt-32 mt-32'>
       <div className='border border-gray-100 bg-gray-100 m-2 p-2 py-8 rounded-lg shadow-2xl'>
         <div className='  flex justify-around items-center'>
-          <div className=''><img src={`${helperDetails.helperImageURL}`} alt='photo' className=' w-24 h-24 rounded-full' /></div>
+        <div className=''>
+  <img src={helperDetails.helperImageURL} alt='' className='w-24 h-24 rounded-full' />
+    </div>
+
           <div className=' text-center font-semibold uppercase '>
             <p className='text-xl font-semibold'>{helperDetails.helperName}</p>
             <div className=' flex items-center justify-center text-gray-600 md:font-extrabold'>

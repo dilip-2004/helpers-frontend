@@ -14,7 +14,7 @@ const schema=yup.object().shape({
     userPassword:yup.string().min(8, 'Password must be at least 8 characters').max(20, 'Password must be at most 20 characters').required('Password is required'),
   });
   
-const Usersignup = (props) => {
+const Usersignup = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

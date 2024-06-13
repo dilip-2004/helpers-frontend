@@ -124,7 +124,7 @@ const Helperdetails = (props) => {
       const res=await axios.put(`${process.env.REACT_APP_API_URL}api/helper/helperRating/${helperID}/${userID}`,{value});
       console.log(res);
     }catch(error){
-      console.log(error.message);
+      console.log(error.message)
     }
   };
 

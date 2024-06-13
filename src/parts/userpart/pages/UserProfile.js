@@ -10,6 +10,7 @@ const UserProfile = (props) => {
     e.preventDefault();
     localStorage.removeItem('activeUser');
     localStorage.removeItem('userData');
+    setUserData(JSON.parse(localStorage.getItem('userData')));
     props.setUserLogin(localStorage.getItem('activeUser'));
     navigate('/');
   }

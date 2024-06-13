@@ -65,7 +65,7 @@ const MobileNumberVerification = () => {
     setMessage("");
     if(otp === '' || otp === undefined || otp.length !== 6) {
       setLoading(false);
-      setMessage('invalid otp code!');
+      setMessage('invalid otp code!')
       return;
     }
 

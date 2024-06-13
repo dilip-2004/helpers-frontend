@@ -62,7 +62,7 @@ const Helperslist = (props) => {
                 <div className='w-1/4 '> 
                   <img 
                     src={`${helper.helperImageURL}`}
-                    alt='photo'
+                    alt=''
                     className=' w-16 h-16 rounded-full shadow-lg opacity-80 transition duration-300 delay-100 ease-in-out hover:opacity-100 '  
                   />
                 </div>
