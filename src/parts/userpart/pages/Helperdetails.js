@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FiPhone, FiShoppingCart } from 'react-icons/fi';
 import { MdFavorite } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
@@ -7,26 +7,25 @@ import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 
 const Helperdetails = (props) => {
-  
   const [helper, setHelper] = useState([]);
   const [ratedValue, setRatedValue] = useState(null);
   const { helperID } = useParams();
-  const [checkATC,setCheckATC]=useState(JSON.parse(localStorage.getItem('userData')).addToCart.find(id => id===helperID));
-  const [checkLike,setCheckLikes]=useState(JSON.parse(localStorage.getItem('userData')).likes.find(id => id===helperID));
-  const userID=JSON.parse(localStorage.getItem('userData')).id;
-  let ratedUserID;
+  const [checkATC, setCheckATC] = useState(JSON.parse(localStorage.getItem('userData')).addToCart.find(id => id === helperID));
+  const [checkLike, setCheckLikes] = useState(JSON.parse(localStorage.getItem('userData')).likes.find(id => id === helperID));
+  const userID = JSON.parse(localStorage.getItem('userData')).id;
+  const ratedUserIDRef = useRef(null);
 
   useEffect(() => {
     const getDataByID = async () => {
       try {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}api/helper/getDataByID/${helperID}`);
         setHelper(res.data);
-        ratedUserID=res.data.ratedUserID;
-        const hasUserID=ratedUserID.find(data => data.userID===userID);
-        if(!hasUserID){
+        ratedUserIDRef.current = res.data.ratedUserID; 
+
+        const hasUserID = ratedUserIDRef.current.find(data => data.userID === userID);
+        if (!hasUserID) {
           setRatedValue(null);
-        }
-        else{
+        } else {
           setRatedValue(hasUserID.ratedValue);
         }
       } catch (error) {
@@ -35,7 +34,7 @@ const Helperdetails = (props) => {
     };
 
     getDataByID();
-  }, []);
+  }, [helperID, userID]);
 
   const formattedDOB = new Date(helper.helperDOB).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -47,89 +46,83 @@ const Helperdetails = (props) => {
     window.location.href = `tel:${helper.helperPhoneNumber}`;
   };
 
-  const handleAddToCart =async () => {
-    const userData=JSON.parse(localStorage.getItem('userData'));
-    const userID=userData.id;
+  const handleAddToCart = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userID = userData.id;
 
-    if(!checkATC)
-    {
-      try{
-        const res=await axios.put(`${process.env.REACT_APP_API_URL}api/user/addToCart/${userID}`,{helperID});
+    if (!checkATC) {
+      try {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user/addToCart/${userID}`, { helperID });
         localStorage.setItem('userData', JSON.stringify(res.data));
-        setCheckATC(JSON.parse(localStorage.getItem('userData')).addToCart.find(id => id===helperID));
-      }catch(error){
+        setCheckATC(JSON.parse(localStorage.getItem('userData')).addToCart.find(id => id === helperID));
+      } catch (error) {
         console.log(error.message);
       }
-    }
-    else
-    {
-      try{
-        const res=await axios.put(`${process.env.REACT_APP_API_URL}api/user/removeFromCart/${userID}`,{helperID});
+    } else {
+      try {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user/removeFromCart/${userID}`, { helperID });
         localStorage.setItem('userData', JSON.stringify(res.data));
-        setCheckATC(JSON.parse(localStorage.getItem('userData')).addToCart.find(id => id===helperID));
-      }catch(error){
+        setCheckATC(JSON.parse(localStorage.getItem('userData')).addToCart.find(id => id === helperID));
+      } catch (error) {
         console.log(error.message);
       }
     }
   };
 
-  const handleLike =async () => {
-    const userData=JSON.parse(localStorage.getItem('userData'));
-    const userID=userData.id;
+  const handleLike = async () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userID = userData.id;
 
-    if(!checkLike)
-    {
-      try{
-        const res=await axios.put(`${process.env.REACT_APP_API_URL}api/user/addLikes/${userID}`,{helperID});
+    if (!checkLike) {
+      try {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user/addLikes/${userID}`, { helperID });
         localStorage.setItem('userData', JSON.stringify(res.data));
-        setCheckLikes(JSON.parse(localStorage.getItem('userData')).likes.find(id => id===helperID));
-      }catch(error){
+        setCheckLikes(JSON.parse(localStorage.getItem('userData')).likes.find(id => id === helperID));
+      } catch (error) {
         console.log(error.message);
       }
 
-      // add liked user id in the helperdb
-      try{
-        const res=await axios.put(`${process.env.REACT_APP_API_URL}api/helper/addLikedID/${helperID}`,{userID});
+      // Add liked user id in the helperdb
+      try {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}api/helper/addLikedID/${helperID}`, { userID });
         console.log(res);
-      }catch(error){
+      } catch (error) {
         console.log(error.message);
       }
-    }
-    else
-    {
-      try{
-        const res=await axios.put(`${process.env.REACT_APP_API_URL}api/user/removeLikes/${userID}`,{helperID});
+    } else {
+      try {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}api/user/removeLikes/${userID}`, { helperID });
         localStorage.setItem('userData', JSON.stringify(res.data));
-        setCheckLikes(JSON.parse(localStorage.getItem('userData')).likes.find(id => id===helperID));
-      }catch(error){
+        setCheckLikes(JSON.parse(localStorage.getItem('userData')).likes.find(id => id === helperID));
+      } catch (error) {
         console.log(error.message);
       }
 
-      // remove liked user id from the helperdb
-      try{
-        const res=await axios.put(`${process.env.REACT_APP_API_URL}api/helper/removeLikedID/${helperID}`,{userID});
+      // Remove liked user id from the helperdb
+      try {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}api/helper/removeLikedID/${helperID}`, { userID });
         console.log(res);
-      }catch(error){
+      } catch (error) {
         console.log(error.message);
       }
     }
   };
 
-  const handleHelperRating=async(newValue)=>{
-    const userData=JSON.parse(localStorage.getItem('userData'));
-    const userID=userData.id;
+  const handleHelperRating = async (newValue) => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userID = userData.id;
     setRatedValue(newValue);
-    const value=!newValue ? 0 : newValue;
-    try{
-      const res=await axios.put(`${process.env.REACT_APP_API_URL}api/helper/helperRating/${helperID}/${userID}`,{value});
+    const value = !newValue ? 0 : newValue;
+    try {
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}api/helper/helperRating/${helperID}/${userID}`, { value });
       console.log(res);
-    }catch(error){
-      console.log(error.message)
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
   return (
-    <div className=" bg-gray-100 text-black p-6 rounded-lg shadow-xl m-2 xl:m-auto xl:mt-2 sm:mt-2 md:mt-2 lg:mt-2 sm:max-w-sm sm:m-auto md:max-w-md md:m-auto lg:max-w-lg lg:m-auto">
+    <div className="bg-gray-100 text-black p-6 rounded-lg shadow-xl m-2 xl:m-auto xl:mt-2 sm:mt-2 md:mt-2 lg:mt-2 sm:max-w-sm sm:m-auto md:max-w-md md:m-auto lg:max-w-lg lg:m-auto">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div className="flex items-center mb-4 md:mb-0">
           <img src={`${helper.helperImageURL}`} alt="Profile" className="w-16 h-16 rounded-full" />
@@ -138,7 +131,7 @@ const Helperdetails = (props) => {
             <p className="text-base">{helper.helperRole}</p>
           </div>
         </div>
-        <div className=" bg-gray-200 rounded-lg px-2 pt-1.5  text-white font-semibold">
+        <div className="bg-gray-200 rounded-lg px-2 pt-1.5 text-white font-semibold">
           <Box
             sx={{
               '& > legend': { mt: 2 },
@@ -153,24 +146,24 @@ const Helperdetails = (props) => {
           </Box>
         </div>
       </div>
-      <div className=' space-y-3 text-gray-800'>
+      <div className="space-y-3 text-gray-800">
         <p className="text-lg">
-          <span className=" font-semibold">Gender:</span> {helper.helperGender}
+          <span className="font-semibold">Gender:</span> {helper.helperGender}
         </p>
         <p className="text-lg">
-          <span className=" font-semibold">Date of Birth:</span> {formattedDOB}
+          <span className="font-semibold">Date of Birth:</span> {formattedDOB}
         </p>
         <p className="text-lg">
-          <span className=" font-semibold">Experience:</span> {helper.helperExperience}
+          <span className="font-semibold">Experience:</span> {helper.helperExperience}
         </p>
         <p className="text-lg">
-          <span className=" font-semibold">Work Time:</span> {helper.helperWorkTime}
+          <span className="font-semibold">Work Time:</span> {helper.helperWorkTime}
         </p>
         <p className="text-lg">
-          <span className=" font-semibold">Email:</span> {helper.helperEmail}
+          <span className="font-semibold">Email:</span> {helper.helperEmail}
         </p>
         <p className="text-lg">
-          <span className=" font-semibold">Phone Number:</span> {helper.helperPhoneNumber}
+          <span className="font-semibold">Phone Number:</span> {helper.helperPhoneNumber}
         </p>
       </div>
       <div className="flex justify-between mt-4">

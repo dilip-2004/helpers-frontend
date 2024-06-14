@@ -32,7 +32,7 @@ const Login = (props) => {
       try{
         setError('');
         setSuccessMessage('');
-        const res=await axios.post(`${process.env.REACT_APP_API_URL}api/user/login`,values);
+        const res=await axios.post(`https://helpers.onrender.com/api/user/login`,values);
         const userData=res.data;
         userData.id=userData._id;
         setSuccessMessage('Logging in.....');
